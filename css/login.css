@@ -1,0 +1,41 @@
+body {
+    display: flex;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+.app-logo-container {
+    background-color: #333333;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40%;
+}
+
+.app-logo-container img {
+    width: 500px;
+}
+
+.login-form-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 60%;
+}
+
+.form-area {
+    border: 1px solid #d4d4d4;
+    border-radius: 5px;
+    min-width: 500px;
+}
+
+.text-form {
+    background-color: #333333;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
