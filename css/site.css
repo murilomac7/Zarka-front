@@ -54,7 +54,7 @@ main {
     top: 10px;
     left: 20px;
     z-index: 99;
-    padding: 5px;    
+    padding: 5px;
 }
 
 .integration-container-drag {
@@ -98,13 +98,16 @@ main {
     width: fit-content;
     border-radius: 7px;
     background-color: #f4fafa;
+    box-shadow: 10px 10px 21px -4px rgba(230, 230, 230, 1);
 }
 
 .custom-operator .flowchart-operator-title {
-    background-color: #096b6b;
+    background-color: #333333;
     color: #ffffff !important;
     border-radius: 5px 5px 0 0;
     padding: 10px;
+    display: flex;
+    align-items: center;
 }
 
 .custom-operator .flowchart-operator-title i {
@@ -113,4 +116,43 @@ main {
 
 .custom-operator .flowchart-operator-body {
     padding: 10px 15px;
+}
+
+.connector-logo {
+    width: 100%;
+    max-width: 62px;
+}
+
+.connector-logo.small {
+    max-width: 28px;
+}
+
+.advanced-params.hidden {
+    height: 0;
+    overflow: hidden;
+    transition: all 1s ease;
+}
+
+.advanced-params {
+    height: fit-content;
+    transition: all 1s ease;
+}
+
+.btn-show-params {    
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.btn-show-params button {
+    max-width: 28px;
+    max-height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-show-params button i {
+    color: #ffffff !important;
 }

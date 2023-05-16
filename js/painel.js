@@ -1,9 +1,7 @@
 var parametros = [
-    '<form><label>Titulo</label><input type="text" class="form-control" /><label>Email</label><br><input type="text" class="form-control" /><label>Diretório</label><br><input type="text" class="form-control" /></form>',
-    '<form><label>Pasta</label><input type="text" class="form-control" /></form>',
-    '<form><label>Titulo</label><input type="text" class="form-control" /><label>Container</label><br><input type="text" class="form-control" /></form>',
-    '<form><label>Repositório</label><input type="text" class="form-control" /><label>Usuário</label><br><input type="text" class="form-control" /></form>',
-    '<form><label>Repositório</label><input type="text" class="form-control" /><label>Usuário</label><br><input type="text" class="form-control" /></form>',
+    '<form><label>Diretório</label><input type="text" class="form-control" /><div class="advanced-params hidden"><label>Título</label><input type="text" class="form-control" /></div></form>',
+    '<form><label>Tipo</label><select class="form-select"><option>Selecione...</option><option value="1">Resumo</option></select><label>Prompt</label><input type="text" class="form-control" /></form>',
+    '<form><label>Titulo</label><input type="text" class="form-control" /></form>',
 ];
 var operatorI = 0;
 
@@ -59,8 +57,8 @@ function addCardFlowchart(topPos, leftPos, title, icon, hasInput, parametros) {
         top: topPos,
         left: leftPos,
         properties: {
-            title: `<i class="fa-brands ${icon} me-1"></i>` + title,
-            body: parametros,
+            title: `<img class='connector-logo small me-1' src="img/connector-logos/${icon}" />` + title,
+            body: parametros + `<div class='btn-show-params'>Parâmetros avançados <button type='button' class='btn btn-dark' onclick='showAdvancedParams(${operatorI})'><i class='fa fa-chevron-down'></i></button></div>`,
             inputs: {},
             outputs: {
                 output_1: {
@@ -84,4 +82,11 @@ function addCardFlowchart(topPos, leftPos, title, icon, hasInput, parametros) {
     operatorI++;
 
     $flowchart.flowchart('createOperator', operatorId, operatorData);
+}
+
+function showAdvancedParams(index){
+    console.log(index)
+    var card = $('#created_operator_' + index);
+
+    console.log(card.children())
 }
