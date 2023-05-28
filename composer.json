@@ -1,5 +1,5 @@
 {
     "require": {
-      "ext-apache": "*"
+        "php": "^7.4.0"
     }
-  }
+}
