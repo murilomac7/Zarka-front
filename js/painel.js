@@ -1,92 +1,193 @@
-var parametros = [
-    '<form><label>Diretório</label><input type="text" class="form-control" /><div class="advanced-params hidden"><label>Título</label><input type="text" class="form-control" /></div></form>',
-    '<form><label>Tipo</label><select class="form-select"><option>Selecione...</option><option value="1">Resumo</option></select><label>Prompt</label><input type="text" class="form-control" /></form>',
-    '<form><label>Titulo</label><input type="text" class="form-control" /></form>',
-];
+var jsonFinal = [];
+var conectoresAtivos = [];
 var operatorI = 0;
 
 var dataFlowchart = {
-    operators: {}
+  operators: {},
 };
 
-var $flowchart = $('.grid-mask');
+var $flowchart = $(".grid-mask");
 
 $(function () {
+  $flowchart.flowchart({
+    data: dataFlowchart,
+  });
 
-    $flowchart.flowchart({
-        data: dataFlowchart
+  criarEventosDeDraggable();
+  $("#droppable").droppable({
+    accept: ".card-integration",
+    drop: function (event, ui) {
+      var element = ui.helper[0];
+
+      var top = ui.helper.position().top;
+      var left = ui.helper.position().left;
+
+      var ultimoNode = $("#ultimoNode").val();
+      var hasInput = true;
+
+      if (ultimoNode == "") {
+        hasInput = false;
+      }
+
+      var parametros = "";
+
+      $.ajax({
+        type: "GET",
+        url: `https://zarka.herokuapp.com/sdk/connector/schema/${element.dataset.connectorname}/${element.dataset.method}`,
+        headers: { Authorization: sessionStorage.getItem("token") },
+        success: function (result) {
+          if (result.errorMessage == "null") {
+            var requestObj = Object.keys(JSON.parse(result.schemaRequest));
+            parametros = document.createElement("form");
+            parametros.classList.add("form-connector");
+            parametros.setAttribute(
+              "id",
+              "form_" + element.dataset.connectorname
+            );
+
+            requestObj.forEach(function (param) {
+              createDynamicElement(element, parametros, param);
+            });
+
+            if (element.classList.contains("drag-card")) {
+              addCardFlowchart(
+                top,
+                left,
+                element.dataset.name,
+                element.dataset.icon,
+                hasInput,
+                parametros
+              );
+              $("#ultimoNode").val(element.dataset.id);
+              conectoresAtivos.push({
+                conector: element.dataset.connectorname,
+                method: element.dataset.method,
+                params: requestObj,
+              });
+            }
+          }
+        },
+        error: function (err) {
+          alert(err);
+        },
+      });
+    },
+  });
+});
+
+$("#btn-send-flow").on("click", function () {
+  conectoresAtivos.forEach(function (conector) {
+    var body = {};
+
+    conector.params.forEach(function (param) {
+      body[param] = $(`#${conector.conector}_${param}`).val();
     });
 
-    criarEventosDeDraggable();
-    $("#droppable").droppable({
-        accept: ".card-integration",
-        drop: function (event, ui) {
-            var element = ui.helper[0];
+    var requestFinal = {
+      connectorName: conector.conector,
+      requestBody: body,
+      requestName: conector.method,
+      activity: "retrieve",
+    };
 
-            var top = ui.helper.position().top;
-            var left = ui.helper.position().left;
+    jsonFinal.push(requestFinal);
+  });
 
-            var ultimoNode = $('#ultimoNode').val();
-            var hasInput = true;
+  var bodyRequest = JSON.stringify(jsonFinal);
 
-            if (ultimoNode == '') {
-                hasInput = false;
-            }
-
-            if (element.classList.contains('drag-card')) {
-                addCardFlowchart(top, left, element.dataset.name, element.dataset.icon, hasInput, parametros[element.dataset.id - 1]);
-                $('#ultimoNode').val(element.dataset.id);
-            }
-
-        }
-    });
+  $.ajax({
+    method: "POST",
+    url: "https://zarka.herokuapp.com/sdk/workflow/run",
+    headers: { Authorization: sessionStorage.getItem("token") },
+    data: bodyRequest,
+    contentType: "application/json",
+    success: function (response) {
+      console.log(response);
+    },
+    error: function (response) {
+      alert("Erro: " + response.responseText);
+    },
+  });
 });
 
 function criarEventosDeDraggable() {
-
-    $("#draggable").draggable();
-    $(".drag-card").draggable({
-        helper: "clone"
-    });
-    $(".clone").draggable();
+  $("#draggable").draggable();
+  $(".drag-card").draggable({
+    helper: "clone",
+  });
+  $(".clone").draggable();
 }
 
 function addCardFlowchart(topPos, leftPos, title, icon, hasInput, parametros) {
-    var operatorId = 'created_operator_' + operatorI;
-    var operatorData = {
-        top: topPos,
-        left: leftPos,
-        properties: {
-            title: `<img class='connector-logo small me-1' src="img/connector-logos/${icon}" />` + title,
-            body: parametros + `<div class='btn-show-params'>Parâmetros avançados <button type='button' class='btn btn-dark' onclick='showAdvancedParams(${operatorI})'><i class='fa fa-chevron-down'></i></button></div>`,
-            inputs: {},
-            outputs: {
-                output_1: {
-                    label: 'saída',
-                }
-            },
-            class: 'custom-operator'
-        }
+  var operatorId = "created_operator_" + operatorI;
+  var operatorData = {
+    top: topPos,
+    left: leftPos,
+    properties: {
+      title:
+        `<img class='connector-logo small me-1' src="img/connector-logos/${icon}" />` +
+        title,
+      body: parametros,
+      inputs: {},
+      outputs: {
+        output_1: {
+          label: "saída",
+        },
+      },
+      class: "custom-operator",
+    },
+  };
+
+  if (hasInput) {
+    var inputToAdd = {
+      input_1: {
+        label: "entrada",
+      },
     };
 
-    if(hasInput){
-        var inputToAdd = {
-            input_1: {
-                label: 'entrada',
-            }
-        };
+    Object.assign(operatorData.properties.inputs, inputToAdd);
+  }
 
-        Object.assign(operatorData.properties.inputs, inputToAdd);
-    }
+  operatorI++;
 
-    operatorI++;
+  $flowchart.flowchart("createOperator", operatorId, operatorData);
 
-    $flowchart.flowchart('createOperator', operatorId, operatorData);
+  $flowchart.flowchart({
+    onLinkCreate: function (linkId, linkData) {
+      $("#ChatGPT_text").val('$imageContent');
+      $("#ChatGPT_text").attr("disabled", true);
+      return true;
+    },
+  });
 }
 
-function showAdvancedParams(index){
-    console.log(index)
-    var card = $('#created_operator_' + index);
+function showAdvancedParams(index) {
+  var card = $("#created_operator_" + index);
+}
 
-    console.log(card.children())
+function createDynamicElement(element, parametros, param) {
+  var label = document.createElement("label");
+  label.innerHTML = param;
+  parametros.appendChild(label);
+
+  var input;
+
+  if (param == "type") {
+    input = document.createElement("select");
+    var option1 = document.createElement("option");
+    option1.value = "topic";
+    option1.text = "Tópico";
+
+    var option2 = document.createElement("option");
+    option2.value = "study";
+    option2.text = "Estudo";
+
+    input.appendChild(option1);
+    input.appendChild(option2);
+  } else {
+    input = document.createElement("input");
+  }
+
+  input.setAttribute("id", `${element.dataset.connectorname}_${param}`);
+  parametros.appendChild(input);
 }

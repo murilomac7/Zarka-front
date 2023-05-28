@@ -1,72 +1,89 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Zarka - Painel</title>
-    <link rel="stylesheet" href="lib/bootstrap-5.0.2-dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="lib/jquery-ui-1.13.2/jquery-ui.min.css">
-    <link rel="stylesheet" href="lib/jquery.flowchart/jquery.flowchart.css">
-    <link rel="stylesheet" href="css/site.css">
-    <link rel="stylesheet" href="lib/fontawesome-free-6.4.0-web/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="lib/bootstrap-5.0.2-dist/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="lib/jquery-ui-1.13.2/jquery-ui.min.css" />
+    <link rel="stylesheet" href="lib/jquery.flowchart/jquery.flowchart.css" />
+    <link rel="stylesheet" href="css/site.css" />
+    <link
+      rel="stylesheet"
+      href="lib/fontawesome-free-6.4.0-web/css/all.min.css"
+    />
 
     <script src="lib/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
     <script src="lib/jquery/jquery-3.7.0.min.js"></script>
     <script src="lib/jquery-ui-1.13.2/jquery-ui.min.js"></script>
     <script src="lib/jquery.flowchart/jquery.flowchart.js"></script>
+  </head>
 
-</head>
-
-<body>
+  <body>
     <input type="hidden" id="ultimoNode" value="" />
     <header>
-        <div class="container d-flex align-items-center justify-content-between">
-            <div>
-                <img src="img/logo.png" width="180">
-            </div>
-            <div class="d-flex align-items-center gap-5">
-                <div>
-                    <i class="fas fa-user"></i>
-                    <span class="ms-2">Bem vindo(a), Gabriel Tadeu</span>
-                </div>
-                <button class="btn btn-light ms-auto" onclick="location.href = '/'">
-                    <i class="fas fa-sign-out"></i>
-                    <span>Sair</span>
-                </button>
-            </div>
+      <div class="container d-flex align-items-center justify-content-between">
+        <div>
+          <img src="img/logo.png" width="180" />
         </div>
+        <div class="d-flex align-items-center gap-5">
+          <div>
+            <i class="fas fa-user"></i>
+            <span class="ms-2">Bem vindo(a), Gabriel Tadeu</span>
+          </div>
+          <button class="btn btn-light ms-auto" onclick="location.href = '/'">
+            <i class="fas fa-sign-out"></i>
+            <span>Sair</span>
+          </button>
+        </div>
+      </div>
     </header>
     <main>
+      <div class="finish-btn-area">
+        <button id="btn-send-flow" class="btn btn-success">Salvar fluxo</button>
+      </div>
 
-        <div id="draggable" class="ui-widget-content integration-container">
-            <div class="integration-container-drag"></div>
-            <div id="inner-card-container">
-                <div data-id="1" data-name="Google Drive" data-icon="google-drive.svg"
-                    class="card-integration drag-card">
-                    <img class="connector-logo" src="img/connector-logos/google-drive.svg" />
-                </div>
-                <div data-id="2" data-name="ChatGPT" data-icon="chatgpt-light.svg"
-                    class="card-integration drag-card">
-                    <img class="connector-logo" src="img/connector-logos/chatgpt.svg" />
-                </div>
-                <div data-id="3" data-name="Notion" data-icon="notion-light.svg"
-                    class="card-integration drag-card">
-                    <img class="connector-logo" src="img/connector-logos/notion.svg" />
-                </div>
-            </div>
+      <div id="draggable" class="ui-widget-content integration-container">
+        <div class="integration-container-drag"></div>
+        <div id="inner-card-container">
+          <div
+            data-id="1"
+            data-name="Google Drive"
+            data-connectorName="Drive"
+            data-icon="google-drive.svg"
+            data-method="getFileContentFromFolder"
+            class="card-integration drag-card"
+          >
+            <img
+              class="connector-logo"
+              src="img/connector-logos/google-drive.svg"
+            />
+          </div>
+          <div
+            data-id="2"
+            data-name="ChatGPT"
+            data-connectorName="ChatGPT"
+            data-icon="chatgpt-light.svg"
+            data-method="sendPrompt"
+            class="card-integration drag-card"
+          >
+            <img class="connector-logo" src="img/connector-logos/chatgpt.svg" />
+          </div>
         </div>
+      </div>
 
-        <div id="droppable" class="ui-widget-header"></div>
-        <div class="grid-mask"></div>
-
+      <div id="droppable" class="ui-widget-header"></div>
+      <div class="grid-mask"></div>
+      
     </main>
     <footer class="d-flex align-items-center justify-content-center py-2">
-        by Splitec Inc.
+      by Splitec Inc.
     </footer>
 
     <script type="text/javascript" src="js/painel.js"></script>
-</body>
-
+  </body>
 </html>
