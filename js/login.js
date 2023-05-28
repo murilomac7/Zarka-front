@@ -8,9 +8,10 @@ $("#login-btn").on("click", function () {
     contentType: "application/json",
     success: function (response) {
       console.log(response);
-      sessionStorage.setItem("token", response);
+      sessionStorage.setItem("token", response);    
+      sessionStorage.setItem("user", $('#user').val());  
       loginUser($('#user').val(), $('#password').val())
-        .then(function (data) {
+        .then(function (data) {          
           location.href = "/painel";
         })
         .catch(function (err) {

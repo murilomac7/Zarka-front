@@ -9,6 +9,8 @@ var dataFlowchart = {
 var $flowchart = $(".grid-mask");
 
 $(function () {
+  $("#logged-user").text("Bem vindo(a), " + sessionStorage.getItem("user"));
+
   $flowchart.flowchart({
     data: dataFlowchart,
   });
@@ -154,7 +156,7 @@ function addCardFlowchart(topPos, leftPos, title, icon, hasInput, parametros) {
 
   $flowchart.flowchart({
     onLinkCreate: function (linkId, linkData) {
-      $("#ChatGPT_text").val('$imageContent');
+      $("#ChatGPT_text").val("$imageContent");
       $("#ChatGPT_text").attr("disabled", true);
       return true;
     },
